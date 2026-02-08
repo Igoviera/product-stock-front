@@ -14,11 +14,11 @@ export class ProductService{
     }
 
     create(product: Product){
-        api.post("/products", product)
+        return api.post("/products", product)
     }
 
     delete(productId: number){
-        api.delete(`/products/${productId}`)
+       return api.delete(`/products/${productId}`)
     }
 
     suggestProduction(){

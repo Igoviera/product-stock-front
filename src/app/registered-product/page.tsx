@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trash } from "lucide-react";
+import { Badge, Tag, Trash } from "lucide-react";
 import { ProductService } from "@/services/ProductService";
 import { toast } from "sonner";
 
@@ -48,45 +48,68 @@ const RegisteredProduct = () => {
   return (
     <main className="flex justify-center">
       <section className="w-7xl p-5">
-        <Card className="mb-6 border-blue-200 bg-blue-50/50">
-          <CardHeader>
-            <CardTitle className="text-lg text-blue-800">
+        <Card className="mb-6 border-blue-200 shadow-sm overflow-hidden">
+          <CardHeader className="bg-slate-50/50 border-b border-blue-100">
+            <CardTitle className="text-lg text-blue-800 flex items-center gap-2">
+              <Tag size={20} className="text-blue-600" />
               Produtos Cadastrados
             </CardTitle>
           </CardHeader>
+
           <Table>
-            <TableHeader>
+            <TableHeader className="bg-slate-50">
               <TableRow>
-                <TableHead className="w-[100px]">Códico</TableHead>
-                <TableHead>Nome</TableHead>
-                <TableHead className="text-right">Valor</TableHead>
+                <TableHead className="font-bold w-[120px]">Código</TableHead>
+                <TableHead className="font-bold">Nome do Produto</TableHead>
+                <TableHead className="font-bold text-right">
+                  Preço de Venda
+                </TableHead>
+                <TableHead className="w-[80px] text-center font-bold">
+                  Ações
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {products.length > 0 ? (
                 products.map((product) => (
-                  <TableRow key={product.id || product.code}>
-                    <TableCell className="font-medium">
+                  <TableRow
+                    key={product.id || product.code}
+                    className="hover:bg-blue-50/30 transition-colors"
+                  >
+                    <TableCell className="font-mono text-sm text-slate-600">
                       {product.code}
                     </TableCell>
-                    <TableCell>{product.name}</TableCell>
-                    <TableCell className="text-right">
-                      R${product.price}
+                    <TableCell className="font-medium text-slate-800 uppercase text-xs tracking-wide">
+                      {product.name}
                     </TableCell>
-                    <TableCell className="text-center">
-                      <Trash
-                        color="red"
-                        size={18}
-                        onClick={() => product.id && handleDelete(product.id)}
-                        className="cursor-pointer"
-                      ></Trash>
+                    <TableCell className="text-right">
+                       {product.price}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex justify-center">
+                        <button
+                          onClick={() => product.id && handleDelete(product.id)}
+                          className="p-2 hover:bg-red-50 rounded-full transition-all group"
+                          title="Excluir produto"
+                        >
+                          <Trash
+                            size={18}
+                            className="text-slate-400 group-hover:text-red-500 transition-colors cursor-pointer"
+                          />
+                        </button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={3} className="text-center">
-                    Nenhum produto encontrado.
+                  <TableCell
+                    colSpan={4}
+                    className="text-center py-12 text-slate-500 italic"
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <p>Nenhum produto encontrado no catálogo.</p>
+                    </div>
                   </TableCell>
                 </TableRow>
               )}
