@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { MaterialService } from "@/services/MaterialService";
 import { Material } from "@/types/material";
-import { Badge, Package2, Trash } from "lucide-react";
+import { Package2, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -34,7 +34,15 @@ const RawMaterial = () => {
       .catch((error) => console.error(error));
   };
 
-  const handleDelete = (materialId: number) => {};
+  const handleDelete = async (materialId: number) => {
+    try {
+      await materialService.delete(materialId);
+      setMaterialList(materialList.filter((m) => m.id != materialId));
+    } catch (error) {
+      console.error("Erro ao deletar:", error);
+      toast.error("Deu erro");
+    }
+  };
 
   useEffect(() => {
     fetMaterials();
@@ -45,8 +53,10 @@ const RawMaterial = () => {
       await materialService.create(material);
       setMaterial({ code: "", name: "", stockQuantity: 0 });
       toast.success("Materia Prima cadastrada!");
-    } catch (error) {
-      console.error("Erro ao cadastrar:", error);
+      
+    } catch (error: any) {
+      const mensagemFinal = error.message || "Erro inesperado";
+      toast.error(mensagemFinal);
     }
   };
 
@@ -74,7 +84,7 @@ const RawMaterial = () => {
               <div>
                 <p>Name:</p>
                 <Input
-                  placeholder="Madeira"
+                  placeholder="Ex: Madeira"
                   value={material.name}
                   onChange={(e) =>
                     setMaterial({ ...material, name: e.target.value })

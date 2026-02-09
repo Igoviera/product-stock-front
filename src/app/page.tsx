@@ -48,8 +48,8 @@ const Home = () => {
         description: `O produto ${formData.name} foi salvo.`,
       });
     } catch (error) {
-      toast.error("Erro ao cadastrar", )
-      console.error("Erro ao cadastrar:", error);
+      const mensagemFinal = error.message || "Erro inesperado";
+      toast.error(mensagemFinal);
     }
   };
 

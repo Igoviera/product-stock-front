@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge, Tag, Trash } from "lucide-react";
+import { Tag, Trash } from "lucide-react";
 import { ProductService } from "@/services/ProductService";
 import { toast } from "sonner";
 
@@ -36,12 +36,11 @@ const RegisteredProduct = () => {
     try {
       await productService.delete(productId);
       setProducts(products.filter((p) => p.id !== productId));
-
       toast.success("Produto removido com sucesso!");
+      
     } catch (error) {
-      console.error("Erro ao deletar:", error);
-
-      toast.error("Deu erro");
+      console.log("Erro ao deletar:", error);
+      toast.error("");
     }
   };
 
@@ -83,7 +82,7 @@ const RegisteredProduct = () => {
                       {product.name}
                     </TableCell>
                     <TableCell className="text-right">
-                       {product.price}
+                      R$ {product.price}
                     </TableCell>
                     <TableCell>
                       <div className="flex justify-center">

@@ -9,6 +9,9 @@ const Header = () => {
     </div>
       <div className="flex gap-2 pr-3">
         <p className="hover:bg-blue-400 p-2 rounded-md cursor-pointer">
+          <Link href="/">Pagina Inicial</Link>
+        </p>
+        <p className="hover:bg-blue-400 p-2 rounded-md cursor-pointer">
           <Link href="/registered-product">Produtos cadastrados</Link>
         </p>
         <p className="hover:bg-blue-400 p-2 rounded-md cursor-pointer">
