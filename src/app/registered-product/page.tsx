@@ -58,12 +58,12 @@ const RegisteredProduct = () => {
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow>
-                <TableHead className="font-bold w-[120px]">Código</TableHead>
+                <TableHead className="font-bold w-30">Código</TableHead>
                 <TableHead className="font-bold">Nome do Produto</TableHead>
                 <TableHead className="font-bold text-right">
                   Preço de Venda
                 </TableHead>
-                <TableHead className="w-[80px] text-center font-bold">
+                <TableHead className="w-20 text-center font-bold">
                   Ações
                 </TableHead>
               </TableRow>
