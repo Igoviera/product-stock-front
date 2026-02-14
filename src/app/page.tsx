@@ -29,11 +29,17 @@ const Home = () => {
       necessaryQuantity: 0,
     });
 
-  const fetchSuggestProduction = () => {
-    productService
-      .suggestProduction()
-      .then((response) => setsuggestedProduct(response.data))
-      .catch((error) => console.error(error));
+  const fetchSuggestProduction = async () => {
+    try {
+      const suggestion = await productService.suggestProduction();
+      setsuggestedProduct(suggestion);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Erro ao buscar sugestão de produção");
+      }
+    }
   };
 
   useEffect(() => {
@@ -42,28 +48,49 @@ const Home = () => {
 
   const handleCreateProduct = async () => {
     try {
-      await productService.create(formData);
+      if (!formData.code || !formData.name || !formData.price) {
+        toast.error("Preencha todos os campos");
+        return;
+      }
+
+      const createProduct = await productService.create(formData);
+
       setFormData({ code: "", name: "", price: 0 });
+
       toast.success("Produto cadastrado!", {
-        description: `O produto ${formData.name} foi salvo.`,
+        description: `O produto ${createProduct.name} foi salvo.`,
       });
-    } catch (error) {
-      const mensagemFinal = error.message || "Erro inesperado";
-      toast.error(mensagemFinal);
+    } catch (error: any) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Erro inesperado");
+      }
     }
   };
 
   const handleCreateCompositionProduct = async () => {
     try {
+      if (
+        !compositionsProduct.codeProduct ||
+        !compositionsProduct.codeMaterial ||
+        !compositionsProduct.necessaryQuantity
+      ) {
+        toast.error("Preencha todos os campos");
+        return;
+      }
+
       await compositionService.create(compositionsProduct);
+
       setCompositionsProduct({
         codeProduct: "",
         codeMaterial: "",
         necessaryQuantity: 0,
       });
+
       toast.success("Composição do Produto cadastrada!");
-    } catch (error) {
-      console.error("Erro ao cadastrar:", error);
+    } catch (error: any) {
+      toast.error(error.message || "Erro inesperado");
     }
   };
 
@@ -187,7 +214,6 @@ const Home = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {/* Trocamos flex por grid: 1 coluna no mobile, 3 colunas no desktop */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
                 <div>
                   <p className="text-xs uppercase text-slate-500 font-bold">
@@ -198,7 +224,6 @@ const Home = () => {
                   </p>
                 </div>
 
-                {/* Alinhamento centralizado apenas no desktop via md:text-center */}
                 <div className="md:text-center">
                   <p className="text-xs uppercase text-slate-500 font-bold">
                     Quantidade
@@ -207,8 +232,6 @@ const Home = () => {
                     {suggestedProduct.producaoTotal} un.
                   </p>
                 </div>
-
-                {/* Alinhamento à direita apenas no desktop via md:text-right */}
                 <div className="md:text-right">
                   <p className="text-xs uppercase text-slate-500 font-bold">
                     Valor Total

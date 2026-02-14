@@ -21,15 +21,21 @@ const productService = new ProductService();
 const RegisteredProduct = () => {
   const [products, setProducts] = useState<Product[]>([]);
 
-  const fetchProducts = () => {
-    productService
-      .getAll()
-      .then((response) => setProducts(response.data))
-      .catch((error) => console.error(error));
-  };
-
   useEffect(() => {
-    fetchProducts();
+    const loadProducts = async () => {
+      try {
+        const products = await productService.getAll();
+        setProducts(products);
+      } catch (error) {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        } else {
+          toast.error("Erro ao carregar produtos");
+        }
+      }
+    };
+
+    loadProducts();
   }, []);
 
   const handleDelete = async (productId: number) => {
@@ -37,7 +43,6 @@ const RegisteredProduct = () => {
       await productService.delete(productId);
       setProducts(products.filter((p) => p.id !== productId));
       toast.success("Produto removido com sucesso!");
-      
     } catch (error) {
       console.log("Erro ao deletar:", error);
       toast.error("");
@@ -69,7 +74,7 @@ const RegisteredProduct = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {products.length > 0 ? (
+              {products?.length > 0 ? (
                 products.map((product) => (
                   <TableRow
                     key={product.id || product.code}

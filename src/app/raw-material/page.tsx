@@ -27,36 +27,57 @@ const RawMaterial = () => {
     stockQuantity: 0,
   });
 
-  const fetMaterials = () => {
-    materialService
-      .getAll()
-      .then((response) => setMaterialList(response.data))
-      .catch((error) => console.error(error));
-  };
-
   const handleDelete = async (materialId: number) => {
     try {
       await materialService.delete(materialId);
-      setMaterialList(materialList.filter((m) => m.id != materialId));
+
+      setMaterialList((prev) => prev.filter((m) => m.id !== materialId));
+
+      toast.success("Material removido com sucesso!");
     } catch (error) {
-      console.error("Erro ao deletar:", error);
-      toast.error("Deu erro");
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Erro ao deletar material");
+      }
     }
   };
 
   useEffect(() => {
-    fetMaterials();
+    const loadMaterials = async () => {
+      try {
+        const materials = await materialService.getAll();
+        setMaterialList(materials);
+      } catch (error) {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        } else {
+          toast.error("Erro ao carregar materiais");
+        }
+      }
+    };
+
+    loadMaterials();
   }, []);
 
   const handleCreateRawMaterial = async () => {
     try {
+      if (!material.code || !material.name || !material.stockQuantity) {
+        toast.error("Preencha os campos obrigatórios");
+        return;
+      }
+
       await materialService.create(material);
+
       setMaterial({ code: "", name: "", stockQuantity: 0 });
+
       toast.success("Materia Prima cadastrada!");
-      
-    } catch (error: any) {
-      const mensagemFinal = error.message || "Erro inesperado";
-      toast.error(mensagemFinal);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Erro inesperado");
+      }
     }
   };
 
@@ -129,7 +150,7 @@ const RawMaterial = () => {
                 <TableHead className="font-bold">Código</TableHead>
                 <TableHead className="font-bold">Nome</TableHead>
                 <TableHead className="font-bold text-center">Estoque</TableHead>
-                <TableHead className="w-[80px] text-center font-bold">
+                <TableHead className="w-20 text-center font-bold">
                   Ações
                 </TableHead>
               </TableRow>
