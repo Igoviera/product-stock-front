@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { BadgePlus, ClipboardList, House, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const Header = () => {
   return (
@@ -44,6 +44,7 @@ const Header = () => {
             </SheetTrigger>
 
             <SheetContent side="right" className="bg-white text-black">
+              <SheetTitle></SheetTitle>
               <nav className="flex flex-col gap-4 mt-8 pl-5">
                 <Link href="/">
                   <div className="flex gap-2">
